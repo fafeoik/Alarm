@@ -9,23 +9,11 @@ public class Alarm : MonoBehaviour
 
     private float _volumeLevel = 0.5f;
 
-    private Coroutine _turnOnCoroutine;
-    private Coroutine _turnOffCoroutine;
-
-    private void OnDestroy()
-    {
-        if (_turnOnCoroutine != null)
-            StopCoroutine(_turnOnCoroutine);
-
-        if (_turnOffCoroutine != null)
-            StopCoroutine(_turnOffCoroutine);
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.TryGetComponent<Enemy>(out Enemy enemy))
         {
-            _turnOnCoroutine = StartCoroutine(TurnOn());
+            StartCoroutine(TurnOn());
         }
     }
 
@@ -33,7 +21,7 @@ public class Alarm : MonoBehaviour
     {
         if (collision.TryGetComponent<Enemy>(out Enemy enemy))
         {
-            _turnOffCoroutine = StartCoroutine(TurnOff());
+            StartCoroutine(TurnOff());
         }
     }
 
