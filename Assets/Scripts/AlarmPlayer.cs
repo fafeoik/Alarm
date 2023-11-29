@@ -2,16 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AlarmSound : MonoBehaviour
+public class AlarmPlayer : MonoBehaviour
 {
     [SerializeField] private AudioSource _sound;
-
     [SerializeField] private AlarmScanner _alarmScanner;
-
     [SerializeField] private float _volumeSpeed;
 
     private float _volumeLevel = 0.5f;
-
     private Coroutine _turnOnCoroutine;
     private Coroutine _turnOffCoroutine;
 

@@ -6,30 +6,38 @@ public class Enemy : MonoBehaviour
 {
     [SerializeField] private Transform _treasures;
 
-    private Vector3 _startPoint;
-
     [SerializeField] private float _speed;
 
+    private Vector3 _startPoint;
     private Vector3 _currentTarget;
+
+    private Coroutine _moveCoroutine;
    
     private void Start()
     {
         _currentTarget = _treasures.position;
         _startPoint = transform.position;
+
+        _moveCoroutine = StartCoroutine(Move());
     }
 
-    private void Update()
+    private void OnDestroy()
     {
-        Move();
+        StopCoroutine(_moveCoroutine);
     }
 
-    private void Move()
+    private IEnumerator Move()
     {
-        transform.position = Vector3.MoveTowards(transform.position, _currentTarget, _speed * Time.deltaTime);
-
-        if (transform.position == _treasures.position)
+        while (enabled)
         {
-            _currentTarget = _startPoint;
+            transform.position = Vector3.MoveTowards(transform.position, _currentTarget, _speed * Time.deltaTime);
+
+            if (transform.position == _treasures.position)
+            {
+                _currentTarget = _startPoint;
+            }
+
+            yield return null;
         }
     }
 }
