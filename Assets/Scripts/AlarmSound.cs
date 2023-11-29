@@ -2,18 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Alarm : MonoBehaviour
+public class AlarmSound : MonoBehaviour
 {
     [SerializeField] private AudioSource _sound;
-    [SerializeField] private float _speed;
+
+    [SerializeField] private AlarmScanner _alarmScanner;
+
+    [SerializeField] private float _volumeSpeed;
 
     private float _volumeLevel = 0.5f;
 
     private Coroutine _turnOnCoroutine;
     private Coroutine _turnOffCoroutine;
 
-    private void OnDestroy()
+    private void OnEnable()
     {
+        _alarmScanner.ThiefCameIn += StartTurnOn;
+        _alarmScanner.ThiefLeft += StartTurnOff;
+    }
+
+    private void OnDisable()
+    {
+        _alarmScanner.ThiefCameIn -= StartTurnOn;
+        _alarmScanner.ThiefLeft -= StartTurnOff;
+
         if (_turnOnCoroutine != null)
             StopCoroutine(_turnOnCoroutine);
 
@@ -21,20 +33,20 @@ public class Alarm : MonoBehaviour
             StopCoroutine(_turnOffCoroutine);
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void StartTurnOn()
     {
-        if (collision.TryGetComponent<Enemy>(out Enemy enemy))
-        {
-            _turnOnCoroutine = StartCoroutine(TurnOn());
-        }
+        if (_turnOffCoroutine != null)
+            StopCoroutine(_turnOffCoroutine);
+
+        _turnOnCoroutine = StartCoroutine(TurnOn());
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    private void StartTurnOff()
     {
-        if (collision.TryGetComponent<Enemy>(out Enemy enemy))
-        {
-            _turnOffCoroutine = StartCoroutine(TurnOff());
-        }
+        if (_turnOnCoroutine != null)
+            StopCoroutine(_turnOnCoroutine);
+
+        _turnOffCoroutine = StartCoroutine(TurnOff());
     }
 
     private IEnumerator TurnOn()
@@ -42,11 +54,10 @@ public class Alarm : MonoBehaviour
         bool isWorking = true;
 
         _sound.Play();
-        _sound.volume = 0;
 
         while (isWorking)
         {
-            _sound.volume = Mathf.MoveTowards(_sound.volume, _volumeLevel, _speed * Time.deltaTime);
+            _sound.volume = Mathf.MoveTowards(_sound.volume, _volumeLevel, _volumeSpeed * Time.deltaTime);
             yield return null;
 
             if (_sound.volume == _volumeLevel)
@@ -62,7 +73,7 @@ public class Alarm : MonoBehaviour
 
         while (isWorking)
         {
-            _sound.volume = Mathf.MoveTowards(_sound.volume, 0, _speed * Time.deltaTime);
+            _sound.volume = Mathf.MoveTowards(_sound.volume, 0, _volumeSpeed * Time.deltaTime);
             yield return null;
 
             if (_sound.volume == 0)

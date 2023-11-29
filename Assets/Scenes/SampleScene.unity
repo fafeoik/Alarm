@@ -618,6 +618,7 @@ GameObject:
   - component: {fileID: 739786426}
   - component: {fileID: 739786425}
   - component: {fileID: 739786429}
+  - component: {fileID: 739786430}
   m_Layer: 0
   m_Name: Alarm
   m_TagString: Untagged
@@ -845,8 +846,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e97f1a278fbb90c429b40fa32d4a8c9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &739786430
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 739786424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 232484cf53ad70f4082c54577a5cf8c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   _sound: {fileID: 739786425}
-  _speed: 0.2
+  _alarmScanner: {fileID: 739786429}
+  _volumeSpeed: 0.3
 --- !u!1 &849219414
 GameObject:
   m_ObjectHideFlags: 0
