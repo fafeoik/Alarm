@@ -51,17 +51,15 @@ public class AlarmPlayer : MonoBehaviour
 
     private IEnumerator ChangeVolume(float requiredValue)
     {
-        bool isWorking = true;
-
-        while (isWorking)
+        while (_sound.volume != requiredValue)
         {
             _sound.volume = Mathf.MoveTowards(_sound.volume, requiredValue, _volumeSpeed * Time.deltaTime);
             yield return null;
+        }
 
-            if (_sound.volume == requiredValue)
-            {
-                isWorking = false;
-            }
+        if (_sound.volume == 0)
+        {
+            _sound.Stop();
         }
     }
 }
