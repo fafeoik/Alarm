@@ -8,7 +8,8 @@ public class AlarmPlayer : MonoBehaviour
     [SerializeField] private AlarmScanner _alarmScanner;
     [SerializeField] private float _volumeSpeed;
 
-    private float _volumeLevel = 0.5f;
+    private float _volumeMinLevel = 0;
+    private float _volumeMaxLevel = 0.5f;
     private Coroutine _turnOnCoroutine;
     private Coroutine _turnOffCoroutine;
 
@@ -35,7 +36,9 @@ public class AlarmPlayer : MonoBehaviour
         if (_turnOffCoroutine != null)
             StopCoroutine(_turnOffCoroutine);
 
-        _turnOnCoroutine = StartCoroutine(TurnOn());
+        _sound.Play();
+
+        _turnOnCoroutine = StartCoroutine(ChangeVolume(_volumeMaxLevel));
     }
 
     private void StartTurnOff()
@@ -43,39 +46,20 @@ public class AlarmPlayer : MonoBehaviour
         if (_turnOnCoroutine != null)
             StopCoroutine(_turnOnCoroutine);
 
-        _turnOffCoroutine = StartCoroutine(TurnOff());
+        _turnOffCoroutine = StartCoroutine(ChangeVolume(_volumeMinLevel));
     }
 
-    private IEnumerator TurnOn()
-    {
-        bool isWorking = true;
-
-        _sound.Play();
-
-        while (isWorking)
-        {
-            _sound.volume = Mathf.MoveTowards(_sound.volume, _volumeLevel, _volumeSpeed * Time.deltaTime);
-            yield return null;
-
-            if (_sound.volume == _volumeLevel)
-            {
-                isWorking = false;
-            }
-        }
-    }
-
-    private IEnumerator TurnOff()
+    private IEnumerator ChangeVolume(float requiredValue)
     {
         bool isWorking = true;
 
         while (isWorking)
         {
-            _sound.volume = Mathf.MoveTowards(_sound.volume, 0, _volumeSpeed * Time.deltaTime);
+            _sound.volume = Mathf.MoveTowards(_sound.volume, requiredValue, _volumeSpeed * Time.deltaTime);
             yield return null;
 
-            if (_sound.volume == 0)
+            if (_sound.volume == requiredValue)
             {
-                _sound.Stop();
                 isWorking = false;
             }
         }
